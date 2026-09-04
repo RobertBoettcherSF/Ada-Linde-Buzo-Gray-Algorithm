@@ -28,9 +28,9 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 1 -- Squared_Distance Correctness");
    declare
-      V1 : constant Vector := (0.0, 0.0);
-      V2 : constant Vector := (3.0, 4.0);
-      V3 : constant Vector := (1.0, 1.0);
+      V1 : constant Vector := [0.0, 0.0];
+      V2 : constant Vector := [3.0, 4.0];
+      V3 : constant Vector := [1.0, 1.0];
    begin
       Check ("1.1 Distance to Origin", Squared_Distance (V1, V2) = 25.0);
       Check ("1.2 Distance to Self is zero", Squared_Distance (V1, V1) = 0.0);
@@ -42,7 +42,7 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 2 -- Average_Distortion Perfect Match");
    declare
-      Data : constant Vector_Array := ((1.0, 1.0), (2.0, 2.0));
+      Data : constant Vector_Array := [[1.0, 1.0], [2.0, 2.0]];
    begin
       Check ("2.1 Exact match codebook", Average_Distortion (Data, Data) = 0.0);
       Check ("2.2 Single exact point", Average_Distortion (Data(1..1), Data(1..1)) = 0.0);
@@ -54,10 +54,10 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 3 -- Average_Distortion with Offsets");
    declare
-      Data : constant Vector_Array := ((0.0, 0.0), (0.0, 0.0));
-      CB1  : constant Vector_Array := (1 => (1.0, 1.0));
-      CB2  : constant Vector_Array := (1 => (2.0, 0.0));
-      CB3  : constant Vector_Array := ((0.0, 0.0), (3.0, 4.0));
+      Data : constant Vector_Array := [[0.0, 0.0], [0.0, 0.0]];
+      CB1  : constant Vector_Array := [1 => [1.0, 1.0]];
+      CB2  : constant Vector_Array := [1 => [2.0, 0.0]];
+      CB3  : constant Vector_Array := [[0.0, 0.0], [3.0, 4.0]];
    begin
       Check ("3.1 Offset 1,1 distortion=2.0", Average_Distortion (Data, CB1) = 2.0);
       Check ("3.2 Offset 2,0 distortion=4.0", Average_Distortion (Data, CB2) = 4.0);
@@ -69,12 +69,12 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 4 -- Lloyd Algorithm - Trivial Non-Update");
    declare
-      Data : constant Vector_Array := ((1.0, 1.0), (2.0, 2.0));
+      Data : constant Vector_Array := [[1.0, 1.0], [2.0, 2.0]];
       Result : constant Vector_Array := Optimize_Codebook_Lloyd (Data, Data);
    begin
       Check ("4.1 Length preserved", Result'Length = 2);
-      Check ("4.2 First centroid unmodified", Result(1) = (1.0, 1.0));
-      Check ("4.3 Second centroid unmodified", Result(2) = (2.0, 2.0));
+      Check ("4.2 First centroid unmodified", Result(1) = [1.0, 1.0]);
+      Check ("4.3 Second centroid unmodified", Result(2) = [2.0, 2.0]);
    end;
 
    -----------------------------------------------------------------------------
@@ -82,8 +82,8 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 5 -- Lloyd Algorithm - Simple Convergence");
    declare
-      Data : constant Vector_Array := ((1.0, 1.0), (1.2, 1.0), (9.0, 9.0), (9.2, 9.0));
-      Init : constant Vector_Array := ((0.0, 0.0), (10.0, 10.0));
+      Data : constant Vector_Array := [[1.0, 1.0], [1.2, 1.0], [9.0, 9.0], [9.2, 9.0]];
+      Init : constant Vector_Array := [[0.0, 0.0], [10.0, 10.0]];
       Result : constant Vector_Array := Optimize_Codebook_Lloyd (Data, Init);
    begin
       Check ("5.1 Result Size", Result'Length = 2);
@@ -96,13 +96,13 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 6 -- Lloyd Algorithm - Empty Cell Handling");
    declare
-      Data : constant Vector_Array := ((1.0, 1.0), (1.0, 1.0));
-      Init : constant Vector_Array := ((1.0, 1.0), (100.0, 100.0));
+      Data : constant Vector_Array := [[1.0, 1.0], [1.0, 1.0]];
+      Init : constant Vector_Array := [[1.0, 1.0], [100.0, 100.0]];
       Result : constant Vector_Array := Optimize_Codebook_Lloyd (Data, Init);
    begin
       Check ("6.1 Survived empty cell allocation", Result'Length = 2);
-      Check ("6.2 Valid centroid updated accurately", Result(1) = (1.0, 1.0));
-      Check ("6.3 Outlier empty centroid preserved", Result(2) = (100.0, 100.0));
+      Check ("6.2 Valid centroid updated accurately", Result(1) = [1.0, 1.0]);
+      Check ("6.3 Outlier empty centroid preserved", Result(2) = [100.0, 100.0]);
    end;
 
    -----------------------------------------------------------------------------
@@ -110,7 +110,7 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 7 -- LBG Codebook Generation - Size 1");
    declare
-      Data : constant Vector_Array := ((0.0, 0.0), (2.0, 2.0), (4.0, 4.0));
+      Data : constant Vector_Array := [[0.0, 0.0], [2.0, 2.0], [4.0, 4.0]];
       Result : constant Vector_Array := Generate_Codebook_Lbg (Data, Target_Size => 1);
    begin
       Check ("7.1 Returned size 1", Result'Length = 1);
@@ -123,7 +123,7 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 8 -- LBG Codebook Generation - Power of 2");
    declare
-      Data : constant Vector_Array := ((-10.0, 0.0), (-8.0, 0.0), (10.0, 0.0), (8.0, 0.0));
+      Data : constant Vector_Array := [[-10.0, 0.0], [-8.0, 0.0], [10.0, 0.0], [8.0, 0.0]];
       Result : constant Vector_Array := Generate_Codebook_Lbg (Data, Target_Size => 2);
       Has_Pos : constant Boolean := (Result(1)(1) = 9.0) or (Result(2)(1) = 9.0);
       Has_Neg : constant Boolean := (Result(1)(1) = -9.0) or (Result(2)(1) = -9.0);
@@ -138,7 +138,7 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 9 -- LBG Codebook Generation - Non-Power of 2");
    declare
-      Data : constant Vector_Array := ((0.0, 0.0), (10.0, 0.0), (20.0, 0.0));
+      Data : constant Vector_Array := [[0.0, 0.0], [10.0, 0.0], [20.0, 0.0]];
       Result : constant Vector_Array := Generate_Codebook_Lbg (Data, Target_Size => 3);
    begin
       Check ("9.1 Returned exact requested size 3", Result'Length = 3);
@@ -151,8 +151,7 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 10 -- Boundary Checks & Preconditions");
    declare
-      -- Fixed: Positional aggregate of 1 element must be named.
-      Data : constant Vector_Array := (1 => (1.0, 1.0));
+      Data : constant Vector_Array := [1 => [1.0, 1.0]];
       Caught : Boolean := False;
    begin
       begin
@@ -169,7 +168,7 @@ begin
       Caught := False;
       begin
          declare
-            Init : constant Vector_Array := ((1.0, 1.0), (2.0, 2.0));
+            Init : constant Vector_Array := [[1.0, 1.0], [2.0, 2.0]];
             Result : constant Vector_Array := Optimize_Codebook_Lloyd (Data, Initial_Codebook => Init);
          begin
             Check ("Unreachable block 2", Result'Length > 0);
@@ -186,7 +185,7 @@ begin
    Put_Line ("TEST 11 -- High-Dimensional Generics (3D)");
    declare
       use Lbg_3D;
-      Data : constant Lbg_3D.Vector_Array := ((0.0, 0.0, 0.0), (1.0, 1.0, 1.0));
+      Data : constant Lbg_3D.Vector_Array := [[0.0, 0.0, 0.0], [1.0, 1.0, 1.0]];
       Result : constant Lbg_3D.Vector_Array := Generate_Codebook_Lbg (Data, Target_Size => 2);
    begin
       Check ("11.1 Returned size 2 codebook", Result'Length = 2);
@@ -199,8 +198,8 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 12 -- Zero Epsilon and Loop Behavior");
    declare
-      Data : constant Vector_Array := ((1.0, 1.0), (3.0, 3.0));
-      Init : constant Vector_Array := (1 => (0.0, 0.0));
+      Data : constant Vector_Array := [[1.0, 1.0], [3.0, 3.0]];
+      Init : constant Vector_Array := [1 => [0.0, 0.0]];
       -- Will converge immediately once it reaches the mean. Zero epsilon ensures
       -- it does not infinitely loop on fractional improvements.
       Result : constant Vector_Array := Optimize_Codebook_Lloyd (Data, Init, Epsilon => 0.0, Max_Iterations => 5);
@@ -215,7 +214,7 @@ begin
    -----------------------------------------------------------------------------
    Put_Line ("TEST 13 -- Split Factor Sensitivities");
    declare
-      Data : constant Vector_Array := ((0.0, 0.0), (10.0, 0.0));
+      Data : constant Vector_Array := [[0.0, 0.0], [10.0, 0.0]];
       Result_Small : constant Vector_Array := Generate_Codebook_Lbg (Data, Target_Size => 2, Split_Factor => 0.01);
       Result_Large : constant Vector_Array := Generate_Codebook_Lbg (Data, Target_Size => 2, Split_Factor => 5.0);
    begin
