@@ -80,6 +80,8 @@ package body Lbg_Algorithm is
       end loop;
 
       for Iter in 1 .. Max_Iterations loop
+         pragma Unreferenced (Iter); -- Prevent "unused loop variable" warning
+         
          -- Reset accumulators
          for I in Next_Codebook'Range loop
             for D in 1 .. Dimension loop
