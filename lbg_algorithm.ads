@@ -42,7 +42,6 @@ package Lbg_Algorithm is
       Split_Factor    : Real := 0.01;
       Max_Iterations  : Positive := 100) return Vector_Array
    with Pre => Training_Data'Length > 0 
-               and then Target_Size > 0
                and then Target_Size <= Training_Data'Length
                and then Epsilon >= 0.0
                and then Split_Factor > 0.0;
