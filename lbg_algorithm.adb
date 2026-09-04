@@ -198,7 +198,7 @@ package body Lbg_Algorithm is
 
       -- Kick off the splitting recursion from the global centroid
       declare
-         Initial_Codebook : constant Vector_Array (1 .. 1) := (1 => Centroid);
+         Initial_Codebook : constant Vector_Array (1 .. 1) := [1 => Centroid];
       begin
          return Lbg_Step (Initial_Codebook);
       end;
